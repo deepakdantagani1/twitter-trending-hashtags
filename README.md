@@ -39,46 +39,7 @@ npm install
 - Ensure Redis is installed and running.
 - If RedisBloom is not installed, add it by following the [RedisBloom Documentation](https://github.com/RedisBloom/RedisBloom).
 
-   To start and set up Redis with the required data structures, follow these steps, including the first Redis CLI command:
-
-### **Step 1: Start the Redis Server**
-Make sure the Redis server is running before you proceed with initializing the Bloom Filter and Top-K data structures. Use the following command to start Redis:
-
-```bash
-redis-server
-```
-
----
-
-### **Step 2: Connect to the Redis CLI**
-After starting the Redis server, open a Redis CLI session to execute commands:
-
-```bash
-redis-cli
-```
-
----
-
-### **Step 3: Initialize the Bloom Filter**
-Set up the Bloom Filter to deduplicate tweets. For example:
-
-```plaintext
-BF.RESERVE BLOOM_FILTER_KEY 0.01 100000
-```
-
----
-
-### **Step 4: Initialize the Top-K Data Structure**
-Set up the Top-K data structure to track the most popular hashtags. For example:
-
-```plaintext
-TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
-```
-
-4. **Configure environment variables (if needed):**
-   - Default Redis URL is `redis://localhost:6379`.
-     REDIS_URL=redis://<your-redis-url>:6379
-     ```
+To set up Redis with the required data structures:
 
 #### **Step 1: Start the Redis Server**
 Start the Redis server using the following command:
