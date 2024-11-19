@@ -26,7 +26,7 @@ A application to generate and retrieve a list of the most popular trending hasht
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-repo/twitter-trending-hashtags.git
+   git clone [https://github.com/your-repo/twitter-trending-hashtags.git](https://github.com/deepakdantagani1/twitter-trending-hashtags.git)
    cd twitter-trending-hashtags
    ```
 
@@ -38,15 +38,10 @@ A application to generate and retrieve a list of the most popular trending hasht
 3. **Start Redis:**
    - Ensure Redis is installed and running.
    - If RedisBloom is not installed, add it:
-     ```bash
-     redis-cli
-     > MODULE LOAD /path/to/redisbloom.so
-     ```
+     Refer to the official RedisBloom documentation for installation instructions: https://github.com/RedisBloom/RedisBloom
 
 4. **Configure environment variables (if needed):**
    - Default Redis URL is `redis://localhost:6379`.
-   - You can set `REDIS_URL` in a `.env` file if Redis is hosted elsewhere:
-     ```
      REDIS_URL=redis://<your-redis-url>:6379
      ```
 
@@ -95,22 +90,6 @@ A application to generate and retrieve a list of the most popular trending hasht
 
 ---
 
-## **Testing**
-
-### **Run the Test Script**
-
-1. **Use the provided `tweets.sh` script to simulate tweets:**
-   ```bash
-   bash tweets.sh
-   ```
-
-2. **Verify trending hashtags by calling the `/trending-hashtags` endpoint:**
-   ```bash
-   curl -X GET http://localhost:3000/api/v1/hashtags
-   ```
-
----
-
 ## **Technical Details**
 
 ### **How It Works**
@@ -143,19 +122,6 @@ A application to generate and retrieve a list of the most popular trending hasht
 
 ---
 
-## **Future Improvements**
-
-1. **Caching:** 
-   - Add caching for `/trending-hashtags` to reduce redundant Redis queries.
-
-2. **Pagination:**
-   - Extend `/trending-hashtags` to support pagination for more than 25 results.
-
-3. **Redis Clustering:**
-   - Use Redis Cluster to distribute data across multiple nodes for improved scalability and reliability.
-
----
-
 ## **Production-Level Design**
 
 ### **High-Level Architecture**
@@ -164,7 +130,7 @@ The production-ready design scales seamlessly for high loads and ensures fault t
 
 #### **Components**
 
-1. **API Gateway and Load Balancer:**
+1. **AWS Load Balancer:**
    - **AWS ALB (Application Load Balancer)** serves as the entry point, routing client requests to Kubernetes services.
 
 2. **Kubernetes Cluster (Amazon EKS):**
@@ -181,9 +147,7 @@ The production-ready design scales seamlessly for high loads and ensures fault t
    - Decouples data ingestion and processing for high throughput and fault tolerance.
 
 5. **Monitoring and Security:**
-   - **Prometheus and Grafana:** Track metrics and visualize system health.
    - **CloudWatch Logs:** Capture logs for debugging and auditing.
-   - **Kubernetes Network Policies:** Secure communication between pods.
 
 ---
 
@@ -211,56 +175,3 @@ The production-ready design scales seamlessly for high loads and ensures fault t
 
 3. **Kafka Scaling:**
    - Increase Kafka partitions and brokers for high-throughput messaging.
-
----
-
-### **Durability and Fault Tolerance**
-
-1. **Redis Persistence:**
-   - Enables Redis AOF (Append-Only File) for data durability across restarts.
-
-2. **Kafka Replication:**
-   - Ensures message durability with a replication factor of >1.
-
-3. **Kubernetes Self-Healing:**
-   - Automatically restarts failed pods.
-
----
-
-## **Monitoring and Observability**
-
-1. **Prometheus and Grafana:**
-   - Monitor key metrics such as API response times, Redis performance, and Kafka throughput.
-
-2. **CloudWatch Logs:**
-   - Capture application logs for debugging and auditing.
-
----
-
-## **Cost Considerations**
-
-1. **Compute:**
-   - EC2 costs for EKS worker nodes.
-   - Redis and Kafka hosting costs.
-
-2. **Optimization:**
-   - Use Spot Instances for non-critical workloads.
-   - Scale resources dynamically based on load patterns.
-
----
-
-## **Instructions to Run the Production Setup**
-
-1. **Provision Infrastructure:**
-   - Use **eksctl** or Terraform to provision an EKS cluster.
-   - Deploy Redis (Amazon ElastiCache or Kubernetes Helm).
-
-2. **Deploy Application:**
-   - Build Docker images and push them to Amazon ECR.
-   - Apply Kubernetes manifests using `kubectl apply`.
-
-3. **Test Endpoints:**
-   - Simulate traffic with `tweets.sh`.
-   - Retrieve trending hashtags using `/trending-hashtags`.
-
----
