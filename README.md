@@ -1,13 +1,17 @@
+Here’s the improved and properly structured **README**:
+
+---
+
 # **Twitter Trending Hashtags**
 
-A application to generate and retrieve a list of the most popular trending hashtags from simulated tweets. The application is designed to be fast, scalable, and durable using Redis for state storage and in-memory processing.
+An application to generate and retrieve a list of the most popular trending hashtags from simulated tweets. The application is designed to be fast, scalable, and durable using Redis for state storage and in-memory processing.
 
 ---
 
 ## **Features**
 
-- **POST /tweet:** Accepts tweets and extracts hashtags for processing.
-- **GET /trending-hashtags:** Retrieves the top 25 trending hashtags in descending order.
+- **POST /tweet**: Accepts tweets and extracts hashtags for processing.
+- **GET /trending-hashtags**: Retrieves the top 25 trending hashtags in descending order.
 - Uses Redis Bloom Filter to deduplicate tweets and Redis Top-K to maintain trending hashtags efficiently.
 - Supports high loads with asynchronous processing.
 - Data persists across service restarts.
@@ -16,29 +20,28 @@ A application to generate and retrieve a list of the most popular trending hasht
 
 ## **Requirements**
 
-- Node.js (v18 or higher recommended)
-- Redis (with RedisBloom module installed)
-- npm (comes with Node.js)
+- **Node.js** (v18 or higher recommended)
+- **Redis** (with RedisBloom module installed)
+- **npm** (comes with Node.js)
 
 ---
 
 ## **Installation**
 
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/your-repo/twitter-trending-hashtags.git](https://github.com/deepakdantagani1/twitter-trending-hashtags.git)
-   cd twitter-trending-hashtags
-   ```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/deepakdantagani1/twitter-trending-hashtags.git
+cd twitter-trending-hashtags
+```
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-3. **Start Redis:**
-   - Ensure Redis is installed and running.
-   - If RedisBloom is not installed, add it:
-     Refer to the official RedisBloom documentation for installation instructions: https://github.com/RedisBloom/RedisBloom
+### 3. Start Redis
+- Ensure Redis is installed and running.
+- If RedisBloom is not installed, add it by following the [RedisBloom Documentation](https://github.com/RedisBloom/RedisBloom).
 
    To start and set up Redis with the required data structures, follow these steps, including the first Redis CLI command:
 
@@ -81,17 +84,47 @@ TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
      REDIS_URL=redis://<your-redis-url>:6379
      ```
 
-5. **Start the server:**
-   ```bash
-   npm start
-   ```
+#### **Step 1: Start the Redis Server**
+Start the Redis server using the following command:
+```bash
+redis-server
+```
+
+#### **Step 2: Connect to the Redis CLI**
+Open the Redis CLI:
+```bash
+redis-cli
+```
+
+#### **Step 3: Initialize the Bloom Filter**
+Set up the Bloom Filter to deduplicate tweets:
+```plaintext
+BF.RESERVE BLOOM_FILTER_KEY 0.01 100000
+```
+
+#### **Step 4: Initialize the Top-K Data Structure**
+Set up the Top-K data structure to track the most popular hashtags:
+```plaintext
+TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
+```
+
+### 4. Configure Environment Variables
+- The default Redis URL is `redis://localhost:6379`.
+- If needed, configure `REDIS_URL`:
+  ```bash
+  REDIS_URL=redis://localhost:6379
+  ```
+
+### 5. Start the Server
+```bash
+npm start
+```
 
 ---
 
 ## **Usage**
 
 ### **1. Create a Tweet**
-
 **Endpoint:** `POST /api/v1/tweets`
 
 **Request:**
@@ -111,7 +144,6 @@ TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
 ---
 
 ### **2. Get Trending Hashtags**
-
 **Endpoint:** `GET /api/v1/hashtags`
 
 **Response:**
@@ -132,7 +164,7 @@ TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
 
 1. **Bloom Filter for Deduplication:**
    - Uses Redis Bloom Filter (`BLOOM_FILTER_KEY`) to avoid processing duplicate tweets efficiently.
-   - This minimizes memory usage and ensures near-constant lookup time for deduplication.
+   - Minimizes memory usage and ensures near-constant lookup time for deduplication.
 
 2. **Top-K for Trending Hashtags:**
    - Uses Redis Top-K data structure (`TOP_K_KEY`) to track and rank the most popular hashtags with approximate counts.
@@ -147,21 +179,15 @@ TOPK.RESERVE TOP_K_KEY 25 200 5 0.9
 
 ## **Scaling and Performance**
 
-- **Handles High Loads:**
-  - Designed to handle several requests per second by leveraging asynchronous processing and Redis for state management.
-  
-- **Efficient Algorithms:**
-  - Redis Bloom Filter and Top-K structures use approximate algorithms to ensure low computational overhead.
-
-- **Distributed Redis:**
-  - Can be extended with Redis clustering to handle high-scale environments.
+- **Handles High Loads:** Designed to handle several requests per second by leveraging asynchronous processing and Redis for state management.
+- **Efficient Algorithms:** Redis Bloom Filter and Top-K structures use approximate algorithms to ensure low computational overhead.
+- **Distributed Redis:** Can be extended with Redis clustering to handle high-scale environments.
 
 ---
 
 ## **Production-Level Design**
 
 ### **High-Level Architecture**
-
 The production-ready design scales seamlessly for high loads and ensures fault tolerance. It uses **Amazon EKS (Elastic Kubernetes Service)** for container orchestration and integrates AWS-managed services for reliability.
 
 #### **Components**
@@ -183,7 +209,7 @@ The production-ready design scales seamlessly for high loads and ensures fault t
    - Decouples data ingestion and processing for high throughput and fault tolerance.
 
 5. **Monitoring and Security:**
-   - **CloudWatch Logs:** Capture logs for debugging and auditing.
+   - **CloudWatch Logs:** Captures logs for debugging and auditing.
 
 ---
 
