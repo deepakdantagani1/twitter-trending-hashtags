@@ -42,8 +42,6 @@ A application to generate and retrieve a list of the most popular trending hasht
 
    To start and set up Redis with the required data structures, follow these steps, including the first Redis CLI command:
 
----
-
 ### **Step 1: Start the Redis Server**
 Make sure the Redis server is running before you proceed with initializing the Bloom Filter and Top-K data structures. Use the following command to start Redis:
 
