@@ -1,6 +1,4 @@
 import express from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
 import { initializeRedis } from './redisClient.js';
 import tweetRoutes from './routes/tweet.js';
 import hashtagsRoutes from './routes/hashtags.js';
@@ -13,8 +11,6 @@ const createApp = async () => {
 
     // Middleware Setup
     const setupMiddleware = () => {
-      app.use(helmet()); // Security headers
-      app.use(cors()); // Cross-Origin Resource Sharing
 
       // JSON Parsing Middleware
       app.use(express.json({ limit: '10kb' })); // Limit JSON payload size to 10kb
