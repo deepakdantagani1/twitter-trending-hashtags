@@ -1,7 +1,3 @@
-Here’s the improved and properly structured **README**:
-
----
-
 # **Twitter Trending Hashtags**
 
 An application to generate and retrieve a list of the most popular trending hashtags from simulated tweets. The application is designed to be fast, scalable, and durable using Redis for state storage and in-memory processing.
