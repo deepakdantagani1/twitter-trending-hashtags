@@ -11,32 +11,19 @@ redis.on('error', (err) => logger.error('Redis Client Error', err));
 const BLOOM_FILTER_KEY = 'tweet_filter';
 const TOP_K_KEY = 'topk_hashtags';
 
-const initializeBloomFilter = async () => {
-  try {
-    await redis.bf.reserve(BLOOM_FILTER_KEY, 0.01, 100000); // 1% error rate, 100k capacity
-    logger.info('Bloom Filter initialized.');
-  } catch (err) {
-    if (err.message.includes('ERR item exists')) {
-      logger.warn(`Bloom Filter "${BLOOM_FILTER_KEY}" already exists. Skipping initialization.`);
-    } else {
-      logger.error(`Error initializing Bloom Filter: ${err.message}`);
-      throw err;
-    }
+const checkAndInitializeBloomFilter = async () => {
+  const exists = await redis.exists(BLOOM_FILTER_KEY);
+  if (!exists) {
+    logger.warn(`Bloom Filter "${BLOOM_FILTER_KEY}" does not exist. Attempting to initialize.`);
+    await initializeBloomFilter();
   }
 };
 
-const initializeTopK = async () => {
-  try {
-    const k = 25; // Top 25 hashtags
-    await redis.topK.reserve(TOP_K_KEY, 25);
-    logger.info('Top-K structure initialized.');
-  } catch (err) {
-    if (err.message.includes('key already exists')) {
-      logger.warn(`Top-K "${TOP_K_KEY}" already exists. Skipping initialization.`);
-    } else {
-      logger.error(`Error initializing Top-K structure: ${err.message}`);
-      throw err;
-    }
+const checkAndInitializeTopK = async () => {
+  const exists = await redis.exists(TOP_K_KEY);
+  if (!exists) {
+    logger.warn(`Top-K "${TOP_K_KEY}" does not exist. Attempting to initialize.`);
+    await initializeTopK();
   }
 };
 
@@ -44,13 +31,14 @@ const initializeTopK = async () => {
 export const initializeRedis = async () => {
   try {
     await redis.connect();
-    await initializeBloomFilter();
-    await initializeTopK();
-    logger.info('RedisBloom initialized with Bloom Filter and Top-K structures.');
+    await checkAndInitializeBloomFilter();
+    await checkAndInitializeTopK();
+    logger.info('RedisBloom and Top-K initialization checks completed successfully.');
   } catch (err) {
-    logger.error(`Error initializing RedisBloom: ${err.message}`);
+    logger.error(`Error during RedisBloom check or initialization: ${err.message}`);
     throw err;
   }
 };
+
 
 export { redis, BLOOM_FILTER_KEY, TOP_K_KEY };
