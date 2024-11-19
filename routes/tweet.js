@@ -87,12 +87,17 @@ async function processTweet(tweet) {
       return;
     }
 
-    await addTweetToBloomFilter(tweetHash);
-
+    // Add to Bloom Filter and update Top-K concurrently
     const hashtags = extractHashtags(tweet);
 
+    const tasks = [
+      addTweetToBloomFilter(tweetHash),
+      hashtags.length > 0 ? updateTopKHashtags(hashtags) : Promise.resolve(),
+    ];
+
+    await Promise.all(tasks);
+
     if (hashtags.length > 0) {
-      await updateTopKHashtags(hashtags);
       logger.info(`Processed tweet with hashtags: ${hashtags.join(', ')}`);
     } else {
       logger.info('Tweet contains no hashtags.');
